@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Projeto_Sprint5.Data;
 using Projeto_Sprint5.Data.Dtos.Cliente;
@@ -49,6 +50,11 @@ namespace Projeto_Sprint5.Controllers
         [HttpPost]
         public async Task<IActionResult> CriarNovoCliente([FromBody] CadastraClienteDto cadastraClienteDto)
         {
+            var validator = new CadastraClienteDtoValidator();
+            var resultados = validator.Validate(cadastraClienteDto);
+            var erros = resultados.Errors;
+            if (!resultados.IsValid) return BadRequest(erros);
+
             var cepCliente = await _client.GetCepAsync(cadastraClienteDto.Cep);
             var cidade = _ccContext.Cidades.FirstOrDefault(c => c.Nome == cepCliente.Localidade && c.Estado == cepCliente.UF);
             if (cidade != null)
@@ -72,6 +78,11 @@ namespace Projeto_Sprint5.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> AlterarCliente(int id, [FromBody] AtualizarClienteDto novoClienteDto)
         {
+            var validator = new AtualizarClienteDtoValidator();
+            var resultados = validator.Validate(novoClienteDto);
+            var erros = resultados.Errors;
+            if (!resultados.IsValid) return BadRequest(erros);
+
             var cliente = _ccContext.Clientes.FirstOrDefault(c => c.Id == id);
             if (cliente == null)
             {

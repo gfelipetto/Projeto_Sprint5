@@ -66,6 +66,11 @@ namespace Projeto_Sprint5.Controllers
         [HttpPut("{id}")]
         public IActionResult AlterarCidade(int id, [FromBody] AtualizarCidadeDto novaCidadeDto)
         {
+            var validator = new AtualizarCidadeDtoValidator();
+            var resultados = validator.Validate(novaCidadeDto);
+            var erros = resultados.Errors;
+            if (!resultados.IsValid) return BadRequest(erros);
+
             var cidade = _ccContext.Cidades.FirstOrDefault(c => c.Id == id);
             if (cidade == null)
             {

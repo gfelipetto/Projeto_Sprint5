@@ -16,8 +16,8 @@ namespace Projeto_Sprint5.Data.Dtos.Cidade
     {
         public AtualizarCidadeDtoValidator()
         {
-            RuleFor(c => c.Nome).NotNull().WithMessage("O nome é um campo obrigatório");
-            RuleFor(c => c.Estado).NotNull().WithMessage("O estado é um campo obrigatório");
+            RuleFor(c => c.Nome).NotEmpty().WithMessage("O nome é um campo obrigatório");
+            RuleFor(c => c.Estado).NotEmpty().WithMessage("O estado é um campo obrigatório");
         }
     }
 }
